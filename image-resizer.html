@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online image resizer tool - Adjust image dimensions instantly while maintaining quality. Perfect for web optimization and social media.">
+    <meta name="keywords" content="image resizer, photo size editor, online image resizer, picture resizer, web image optimizer">
+    <meta name="author" content="Your Company Name">
+    <link rel="canonical" href="https://yourdomain.com/image-resizer">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"
+            crossorigin="anonymous"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --primary-color: #818cf8;
+            --text-color: #f8fafc;
+            --accent-color: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Ad Units */
+        .ad-section {
+            background: var(--surface-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        /* Main Tool Section */
+        .tool-wrapper {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--accent-color);
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .dimension-control {
+            background: var(--bg-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .dimension-inputs {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--surface-color);
+            border: 1px solid var(--accent-color);
+            color: var(--text-color);
+            border-radius: 6px;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .preview-card {
+            background: var(--bg-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            height: 250px;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .lock-aspect {
+            background: var(--surface-color);
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lock-aspect.active {
+            background: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .upload-area {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Ad -->
+    <div class="container">
+        <div class="ad-section">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                 data-ad-slot="AD_UNIT_ID_HEADER"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="tool-wrapper">
+            <h1><i class="fas fa-expand-arrows-alt"></i> Image Resizer</h1>
+            <p>Resize images instantly while maintaining quality</p>
+
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-cloud-upload-alt fa-3x" style="color: var(--primary-color);"></i>
+                <h3>Upload Image</h3>
+                <p>Supported formats: JPG, PNG, WEBP</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+
+            <div class="controls-grid">
+                <div class="dimension-control">
+                    <h4><i class="fas fa-ruler-combined"></i> Set Dimensions</h4>
+                    <div class="dimension-inputs">
+                        <div>
+                            <label>Width (px)</label>
+                            <input type="number" id="widthInput" min="1">
+                        </div>
+                        <div class="lock-aspect" id="lockAspect">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div>
+                            <label>Height (px)</label>
+                            <input type="number" id="heightInput" min="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="action-btn" onclick="processImage()">
+                <i class="fas fa-sync-alt"></i> Resize Image
+            </button>
+
+            <div class="preview-grid">
+                <div class="preview-card">
+                    <h3><i class="fas fa-file-image"></i> Original</h3>
+                    <img class="preview-img" id="originalPreview" alt="Original image preview">
+                    <div id="originalStats"></div>
+                </div>
+                <div class="preview-card">
+                    <h3><i class="fas fa-file-image"></i> Resized</h3>
+                    <img class="preview-img" id="resizedPreview" alt="Resized image preview">
+                    <div id="resizedStats"></div>
+                    <a id="downloadLink" style="display: none;">
+                        <button class="action-btn">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Ad -->
+    <div class="container">
+        <div class="ad-section">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                 data-ad-slot="AD_UNIT_ID_FOOTER"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+    </div>
+
+    <script>
+        let aspectRatio = 1;
+        let lockAspectRatio = true;
+        const fileInput = document.getElementById('fileInput');
+        const widthInput = document.getElementById('widthInput');
+        const heightInput = document.getElementById('heightInput');
+        const lockButton = document.getElementById('lockAspect');
+
+        // Initialize AdSense
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
+        // Event Listeners
+        fileInput.addEventListener('change', handleFileUpload);
+        lockButton.addEventListener('click', () => {
+            lockAspectRatio = !lockAspectRatio;
+            lockButton.classList.toggle('active');
+        });
+
+        widthInput.addEventListener('input', () => updateDimensions('width'));
+        heightInput.addEventListener('input', () => updateDimensions('height'));
+
+        async function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file || !file.type.startsWith('image/')) {
+                alert('Please select a valid image file');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                document.getElementById('originalPreview').src = event.target.result;
+                const img = await createImageBitmap(file);
+                aspectRatio = img.width / img.height;
+                widthInput.value = img.width;
+                heightInput.value = img.height;
+                document.getElementById('originalStats').textContent = 
+                    `${file.name} (${img.width}×${img.height}px)`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateDimensions(changedDimension) {
+            if (!lockAspectRatio) return;
+            
+            if (changedDimension === 'width') {
+                heightInput.value = Math.round(widthInput.value / aspectRatio);
+            } else {
+                widthInput.value = Math.round(heightInput.value * aspectRatio);
+            }
+        }
+
+        async function processImage() {
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please upload an image first!');
+                return;
+            }
+
+            try {
+                const img = await createImageBitmap(file);
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const width = parseInt(widthInput.value) || img.width;
+                const height = parseInt(heightInput.value) || img.height;
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    document.getElementById('resizedPreview').src = url;
+                    document.getElementById('resizedStats').textContent = 
+                        `${width}×${height}px`;
+
+                    const downloadLink = document.getElementById('downloadLink');
+                    downloadLink.href = url;
+                    downloadLink.download = `resized_${file.name}`;
+                    downloadLink.style.display = 'block';
+                }, file.type, 1); // Quality set to maximum
+
+            } catch (error) {
+                alert('Error processing image: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
