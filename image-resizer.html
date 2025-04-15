@@ -2,19 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Free online image resizer tool - Adjust image dimensions instantly while maintaining quality. Perfect for web optimization and social media.">
-    <meta name="keywords" content="image resizer, photo size editor, online image resizer, picture resizer, web image optimizer">
-    <meta name="author" content="Your Company Name">
-    <link rel="canonical" href="https://yourdomain.com/image-resizer">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Free online image resizer tool - Adjust image dimensions and format instantly while maintaining quality">
     <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"
-            crossorigin="anonymous"></script>
-    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID" crossorigin="anonymous"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <style>
         :root {
             --bg-color: #0f172a;
@@ -22,6 +15,7 @@
             --primary-color: #818cf8;
             --text-color: #f8fafc;
             --accent-color: #94a3b8;
+            --error-color: #dc2626;
         }
 
         * {
@@ -32,9 +26,10 @@
         }
 
         body {
-            background: var(--bg-color);
+            background: linear-gradient(135deg, var(--bg-color) 0%, #1e293b 100%);
             color: var(--text-color);
             min-height: 100vh;
+            line-height: 1.6;
         }
 
         .container {
@@ -43,30 +38,24 @@
             padding: 20px;
         }
 
-        /* Ad Units */
-        .ad-section {
-            background: var(--surface-color);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        /* Main Tool Section */
         .tool-wrapper {
             background: var(--surface-color);
             padding: 2rem;
-            border-radius: 12px;
+            border-radius: 16px;
             margin: 2rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         .upload-area {
             border: 2px dashed var(--accent-color);
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 3rem 2rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
         }
 
         .upload-area:hover {
@@ -74,23 +63,30 @@
             transform: translateY(-2px);
         }
 
+        .upload-area.dragover {
+            border-color: var(--primary-color);
+            background: rgba(129, 140, 248, 0.05);
+        }
+
         .controls-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
             margin: 2rem 0;
         }
 
-        .dimension-control {
+        .control-card {
             background: var(--bg-color);
             padding: 1.5rem;
-            border-radius: 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .dimension-inputs {
             display: flex;
             gap: 1rem;
             align-items: center;
+            margin-top: 1rem;
         }
 
         input[type="number"] {
@@ -99,7 +95,8 @@
             background: var(--surface-color);
             border: 1px solid var(--accent-color);
             color: var(--text-color);
-            border-radius: 6px;
+            border-radius: 8px;
+            font-size: 1rem;
         }
 
         .preview-grid {
@@ -112,15 +109,18 @@
         .preview-card {
             background: var(--bg-color);
             padding: 1.5rem;
-            border-radius: 8px;
+            border-radius: 12px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .preview-img {
             max-width: 100%;
             height: 250px;
             object-fit: contain;
-            border-radius: 4px;
+            border-radius: 8px;
+            margin: 1rem 0;
+            background: #000;
         }
 
         .action-btn {
@@ -130,97 +130,153 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 1rem;
         }
 
         .action-btn:hover {
             opacity: 0.9;
             transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .lock-aspect {
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            display: none;
+            place-items: center;
+            z-index: 1000;
+        }
+
+        .error-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--error-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .format-control {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+
+        select {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
             background: var(--surface-color);
-            padding: 0.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .lock-aspect.active {
-            background: var(--primary-color);
+            color: var(--text-color);
+            border: 1px solid var(--accent-color);
         }
 
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
             }
-            
-            .upload-area {
-                padding: 2rem 1rem;
+
+            .tool-wrapper {
+                padding: 1.5rem;
+            }
+
+            .dimension-inputs {
+                flex-direction: column;
+            }
+
+            .controls-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header Ad -->
     <div class="container">
-        <div class="ad-section">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
-                 data-ad-slot="AD_UNIT_ID_HEADER"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-        </div>
-    </div>
-
-    <main class="container">
         <div class="tool-wrapper">
-            <h1><i class="fas fa-expand-arrows-alt"></i> Image Resizer</h1>
-            <p>Resize images instantly while maintaining quality</p>
+            <div class="loading-overlay">
+                <div class="spinner"><i class="fas fa-spinner fa-spin fa-3x"></i></div>
+            </div>
 
-            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+            <h1 style="margin-bottom: 1rem;"><i class="fas fa-expand-arrows-alt"></i> Image Resizer Pro</h1>
+            
+            <div class="upload-area" id="dropZone" 
+                 ondragover="handleDragOver(event)"
+                 ondragleave="handleDragLeave(event)"
+                 ondrop="handleDrop(event)"
+                 onclick="document.getElementById('fileInput').click()">
                 <i class="fas fa-cloud-upload-alt fa-3x" style="color: var(--primary-color);"></i>
-                <h3>Upload Image</h3>
-                <p>Supported formats: JPG, PNG, WEBP</p>
+                <h3>Drag & Drop or Click to Upload</h3>
+                <p>Supported formats: JPG, PNG, WEBP (Max 10MB)</p>
                 <input type="file" id="fileInput" accept="image/*" hidden>
             </div>
 
             <div class="controls-grid">
-                <div class="dimension-control">
-                    <h4><i class="fas fa-ruler-combined"></i> Set Dimensions</h4>
+                <div class="control-card">
+                    <h4><i class="fas fa-ruler-combined"></i> Dimensions</h4>
                     <div class="dimension-inputs">
-                        <div>
+                        <div style="flex: 1;">
                             <label>Width (px)</label>
                             <input type="number" id="widthInput" min="1">
                         </div>
-                        <div class="lock-aspect" id="lockAspect">
-                            <i class="fas fa-lock"></i>
+                        <div class="lock-aspect" id="lockAspect" style="margin-top: 24px;">
+                            <i class="fas fa-lock" id="lockIcon"></i>
                         </div>
-                        <div>
+                        <div style="flex: 1;">
                             <label>Height (px)</label>
                             <input type="number" id="heightInput" min="1">
                         </div>
                     </div>
                 </div>
+
+                <div class="control-card">
+                    <h4><i class="fas fa-cog"></i> Settings</h4>
+                    <div class="format-control">
+                        <label>Output Format:</label>
+                        <select id="format">
+                            <option value="original">Original</option>
+                            <option value="jpeg">JPEG</option>
+                            <option value="png">PNG</option>
+                            <option value="webp">WEBP</option>
+                        </select>
+                    </div>
+                    <div class="format-control" id="qualityControl" style="display: none;">
+                        <label>Quality:</label>
+                        <input type="range" id="quality" min="0.1" max="1" step="0.1" value="1">
+                        <span id="qualityValue">100%</span>
+                    </div>
+                </div>
             </div>
 
-            <button class="action-btn" onclick="processImage()">
-                <i class="fas fa-sync-alt"></i> Resize Image
-            </button>
+            <div style="text-align: center; margin: 2rem 0;">
+                <button class="action-btn" onclick="processImage()">
+                    <i class="fas fa-magic"></i> Resize & Convert
+                </button>
+            </div>
 
             <div class="preview-grid">
                 <div class="preview-card">
                     <h3><i class="fas fa-file-image"></i> Original</h3>
-                    <img class="preview-img" id="originalPreview" alt="Original image preview">
+                    <img class="preview-img" id="originalPreview" alt="Original preview">
                     <div id="originalStats"></div>
                 </div>
                 <div class="preview-card">
-                    <h3><i class="fas fa-file-image"></i> Resized</h3>
-                    <img class="preview-img" id="resizedPreview" alt="Resized image preview">
+                    <h3><i class="fas fa-file-export"></i> Converted</h3>
+                    <img class="preview-img" id="resizedPreview" alt="Resized preview">
                     <div id="resizedStats"></div>
                     <a id="downloadLink" style="display: none;">
                         <button class="action-btn">
@@ -230,105 +286,184 @@
                 </div>
             </div>
         </div>
-    </main>
-
-    <!-- Footer Ad -->
-    <div class="container">
-        <div class="ad-section">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
-                 data-ad-slot="AD_UNIT_ID_FOOTER"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-        </div>
     </div>
 
     <script>
         let aspectRatio = 1;
         let lockAspectRatio = true;
-        const fileInput = document.getElementById('fileInput');
-        const widthInput = document.getElementById('widthInput');
-        const heightInput = document.getElementById('heightInput');
-        const lockButton = document.getElementById('lockAspect');
+        let currentFile = null;
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        const maxSizeMB = 10;
 
-        // Initialize AdSense
-        (adsbygoogle = window.adsbygoogle || []).push({});
+        const elements = {
+            fileInput: document.getElementById('fileInput'),
+            widthInput: document.getElementById('widthInput'),
+            heightInput: document.getElementById('heightInput'),
+            lockAspect: document.getElementById('lockAspect'),
+            format: document.getElementById('format'),
+            quality: document.getElementById('quality'),
+            qualityValue: document.getElementById('qualityValue'),
+            qualityControl: document.getElementById('qualityControl'),
+        };
 
         // Event Listeners
-        fileInput.addEventListener('change', handleFileUpload);
-        lockButton.addEventListener('click', () => {
-            lockAspectRatio = !lockAspectRatio;
-            lockButton.classList.toggle('active');
-        });
+        elements.fileInput.addEventListener('change', handleFileSelect);
+        elements.lockAspect.addEventListener('click', toggleAspectLock);
+        elements.widthInput.addEventListener('input', () => updateDimensions('width'));
+        elements.heightInput.addEventListener('input', () => updateDimensions('height'));
+        elements.format.addEventListener('change', handleFormatChange);
+        elements.quality.addEventListener('input', updateQualityDisplay);
 
-        widthInput.addEventListener('input', () => updateDimensions('width'));
-        heightInput.addEventListener('input', () => updateDimensions('height'));
+        // Drag & Drop Handlers
+        function handleDragOver(e) {
+            e.preventDefault();
+            document.getElementById('dropZone').classList.add('dragover');
+        }
 
-        async function handleFileUpload(e) {
-            const file = e.target.files[0];
-            if (!file || !file.type.startsWith('image/')) {
-                alert('Please select a valid image file');
+        function handleDragLeave(e) {
+            e.preventDefault();
+            document.getElementById('dropZone').classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            if (files.length > 0) handleFile(files[0]);
+            document.getElementById('dropZone').classList.remove('dragover');
+        }
+
+        // File Handling
+        async function handleFileSelect(e) {
+            handleFile(e.target.files[0]);
+        }
+
+        async function handleFile(file) {
+            if (!file) return;
+            
+            if (!allowedTypes.includes(file.type)) {
+                showError('Invalid file type. Please upload an image (JPG, PNG, WEBP).');
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = async (event) => {
-                document.getElementById('originalPreview').src = event.target.result;
+            if (file.size > maxSizeMB * 1024 * 1024) {
+                showError(`File size exceeds ${maxSizeMB}MB limit.`);
+                return;
+            }
+
+            currentFile = file;
+            showLoading(true);
+
+            try {
                 const img = await createImageBitmap(file);
                 aspectRatio = img.width / img.height;
-                widthInput.value = img.width;
-                heightInput.value = img.height;
+                elements.widthInput.value = img.width;
+                elements.heightInput.value = img.height;
+                
+                document.getElementById('originalPreview').src = URL.createObjectURL(file);
                 document.getElementById('originalStats').textContent = 
-                    `${file.name} (${img.width}×${img.height}px)`;
-            };
-            reader.readAsDataURL(file);
+                    `${file.name} (${img.width}×${img.height}px • ${formatFileSize(file.size)})`;
+                
+                showLoading(false);
+            } catch (error) {
+                showError('Error loading image. Please try again.');
+                showLoading(false);
+            }
+        }
+
+        // Image Processing
+        async function processImage() {
+            if (!currentFile) {
+                showError('Please upload an image first!');
+                return;
+            }
+
+            showLoading(true);
+            const startTime = performance.now();
+
+            try {
+                const img = await createImageBitmap(currentFile);
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const width = parseInt(elements.widthInput.value) || img.width;
+                const height = parseInt(elements.heightInput.value) || img.height;
+                const format = elements.format.value === 'original' 
+                    ? currentFile.type.split('/')[1] 
+                    : elements.format.value;
+                
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const processingTime = ((performance.now() - startTime)/1000).toFixed(2);
+                    
+                    document.getElementById('resizedPreview').src = url;
+                    document.getElementById('resizedStats').textContent = 
+                        `${width}×${height}px • ${formatFileSize(blob.size)} • ${processingTime}s`;
+                    
+                    const downloadLink = document.getElementById('downloadLink');
+                    downloadLink.href = url;
+                    downloadLink.download = `converted-image.${format}`;
+                    downloadLink.style.display = 'block';
+                    
+                    showLoading(false);
+                }, `image/${format}`, elements.format.value === 'jpeg' ? elements.quality.value : 1);
+                
+            } catch (error) {
+                showError('Error processing image: ' + error.message);
+                showLoading(false);
+            }
+        }
+
+        // Helper Functions
+        function toggleAspectLock() {
+            lockAspectRatio = !lockAspectRatio;
+            elements.lockAspect.classList.toggle('active');
+            document.getElementById('lockIcon').className = 
+                lockAspectRatio ? 'fas fa-lock' : 'fas fa-lock-open';
         }
 
         function updateDimensions(changedDimension) {
             if (!lockAspectRatio) return;
             
             if (changedDimension === 'width') {
-                heightInput.value = Math.round(widthInput.value / aspectRatio);
+                elements.heightInput.value = Math.round(elements.widthInput.value / aspectRatio);
             } else {
-                widthInput.value = Math.round(heightInput.value * aspectRatio);
+                elements.widthInput.value = Math.round(elements.heightInput.value * aspectRatio);
             }
         }
 
-        async function processImage() {
-            const file = fileInput.files[0];
-            if (!file) {
-                alert('Please upload an image first!');
-                return;
-            }
+        function handleFormatChange() {
+            elements.qualityControl.style.display = 
+                this.value === 'jpeg' ? 'flex' : 'none';
+        }
 
-            try {
-                const img = await createImageBitmap(file);
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                const width = parseInt(widthInput.value) || img.width;
-                const height = parseInt(heightInput.value) || img.height;
+        function updateQualityDisplay() {
+            elements.qualityValue.textContent = 
+                `${Math.round(this.value * 100)}%`;
+        }
 
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(img, 0, 0, width, height);
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
 
-                canvas.toBlob((blob) => {
-                    const url = URL.createObjectURL(blob);
-                    document.getElementById('resizedPreview').src = url;
-                    document.getElementById('resizedStats').textContent = 
-                        `${width}×${height}px`;
+        function showLoading(show) {
+            document.querySelector('.loading-overlay').style.display = 
+                show ? 'grid' : 'none';
+        }
 
-                    const downloadLink = document.getElementById('downloadLink');
-                    downloadLink.href = url;
-                    downloadLink.download = `resized_${file.name}`;
-                    downloadLink.style.display = 'block';
-                }, file.type, 1); // Quality set to maximum
-
-            } catch (error) {
-                alert('Error processing image: ' + error.message);
-            }
+        function showError(message) {
+            const alert = document.createElement('div');
+            alert.className = 'error-alert';
+            alert.textContent = message;
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 5000);
         }
     </script>
 </body>
