@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PixelTools Pro - Your Digital Solution</title>
+    <title>PixelTools Pro - Optimize Images and PDFs Online</title>
+    <meta name="description" content="PixelTools Pro offers free, secure, and professional-grade tools for compressing, resizing, converting images and editing PDFs online.">
+    <meta name="keywords" content="image compressor, pdf tools, image resizer, online image tools, free pdf editor">
+    <meta name="author" content="PixelTools Pro">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="canonical" href="https://www.yourdomain.com/">
     <style>
         :root {
             --bg-color: #0f172a;
@@ -34,11 +38,10 @@
             padding: 0 1rem;
         }
 
-        /* Navigation */
         .navbar {
             background: var(--surface-color);
             padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .nav-content {
@@ -68,11 +71,10 @@
             color: var(--primary-color);
         }
 
-        /* Hero Section */
         .hero {
             padding: 6rem 0;
             text-align: center;
-            background: linear-gradient(45deg, var(--surface-color), var(--bg-color));
+            background: linear-gradient(135deg, var(--surface-color), var(--bg-color));
         }
 
         .hero h1 {
@@ -86,7 +88,6 @@
             margin: 0 auto 2rem;
         }
 
-        /* Tools Grid */
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -98,12 +99,13 @@
             background: var(--surface-color);
             padding: 2rem;
             border-radius: 12px;
-            transition: transform 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
             text-align: center;
         }
 
         .tool-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
         .tool-icon {
@@ -121,7 +123,6 @@
             font-size: 0.9rem;
         }
 
-        /* CTA Section */
         .cta-section {
             background: var(--surface-color);
             padding: 4rem 0;
@@ -130,7 +131,21 @@
             margin: 4rem 0;
         }
 
-        /* Footer */
+        .cta-section button {
+            margin-top: 1.5rem;
+            padding: 1rem 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .cta-section button:hover {
+            background: var(--secondary-color);
+        }
+
         footer {
             background: var(--surface-color);
             padding: 3rem 0;
@@ -161,6 +176,11 @@
             text-decoration: none;
         }
 
+        .ads-section {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -175,6 +195,8 @@
             }
         }
     </style>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -191,51 +213,58 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="home">
         <div class="container">
             <h1>Transform Your Digital Workflow</h1>
             <p>Professional-grade tools for image and PDF processing. Fast, secure, and completely online.</p>
         </div>
     </section>
 
+    <!-- Ads Section (Above Tools) -->
+    <div class="ads-section">
+        <!-- Replace with your AdSense code unit -->
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+            data-ad-slot="1111111111"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
     <!-- Tools Section -->
     <section class="container" id="tools">
         <div class="tools-grid">
-            <!-- Image Tools -->
-            <a href="https://Tools/image-compress" style="text-decoration: none; color: inherit;">
-    <div class="tool-card">
-        <i class="fas fa-file-image tool-icon"></i>
-        <h3>Image Compressor</h3>
-        <p>Optimize images without quality loss</p>
-     </div>
-
-        <div class="tool-card">
+            <a href="image-compress.html" class="tool-card">
+                <i class="fas fa-file-image tool-icon"></i>
+                <h3>Image Compressor</h3>
+                <p>Optimize images without quality loss</p>
+            </a>
+            <a href="#" class="tool-card">
                 <i class="fas fa-crop tool-icon"></i>
                 <h3>Image Resizer</h3>
                 <p>Resize images to exact dimensions</p>
-            </div>
-            <div class="tool-card">
+            </a>
+            <a href="#" class="tool-card">
                 <i class="fas fa-file-export tool-icon"></i>
                 <h3>Format Converter</h3>
                 <p>Convert between JPG, PNG, WEBP</p>
-            </div>
-
-            <!-- PDF Tools -->
-            <div class="tool-card">
+            </a>
+            <a href="#" class="tool-card">
                 <i class="fas fa-file-pdf tool-icon"></i>
                 <h3>PDF Compressor</h3>
                 <p>Reduce PDF file size efficiently</p>
-            </div>
-            <div class="tool-card">
+            </a>
+            <a href="#" class="tool-card">
                 <i class="fas fa-file-merge tool-icon"></i>
                 <h3>PDF Merger</h3>
                 <p>Combine multiple PDFs into one</p>
-            </div>
-            <div class="tool-card">
+            </a>
+            <a href="#" class="tool-card">
                 <i class="fas fa-file-signature tool-icon"></i>
                 <h3>PDF Editor</h3>
                 <p>Edit and annotate PDF documents</p>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -244,11 +273,21 @@
         <div class="cta-section">
             <h2>Start Optimizing Now</h2>
             <p>Join thousands of professionals who trust our tools</p>
-            <button style="margin-top: 1.5rem; padding: 1rem 2rem; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer;">
-                Get Started Free
-            </button>
+            <button>Get Started Free</button>
         </div>
     </section>
+
+    <!-- Ads Section (Before Footer) -->
+    <div class="ads-section">
+        <!-- Replace with your AdSense code unit -->
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+            data-ad-slot="2222222222"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
 
     <!-- Footer -->
     <footer>
