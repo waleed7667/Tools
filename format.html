@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Image Converter | PNG, JPG, WEBP Converter</title>
+    <meta name="description" content="Free online image converter with preview. Convert between PNG, JPG, WEBP formats instantly. Dark theme, responsive design, and optimized for SEO.">
+    <meta name="keywords" content="image converter, photo converter, png to jpg, webp converter, image optimizer">
+    
+    <!-- SEO Meta Tags -->
+    <meta property="og:title" content="Ultimate Online Image Format Converter">
+    <meta property="og:description" content="Convert image formats with live preview. Supports PNG, JPG, WEBP formats instantly.">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_AD_CLIENT_ID" crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --primary-bg: #1a1a1a;
+            --secondary-bg: #2d2d2d;
+            --accent: #00cc88;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .converter-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .preview-section {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+            min-height: 300px;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            margin: 1rem auto;
+            display: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .conversion-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .option-card {
+            background: var(--secondary-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-card.active {
+            border-color: var(--accent);
+            background: rgba(0, 204, 136, 0.1);
+            box-shadow: 0 0 15px rgba(0,204,136,0.2);
+        }
+
+        .option-card.active::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--accent);
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 204, 136, 0.5);
+        }
+
+        .file-input-area {
+            border: 2px dashed rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            transition: border-color 0.3s ease;
+        }
+
+        .file-input-area:hover {
+            border-color: var(--accent);
+        }
+
+        .custom-file-input {
+            background: var(--accent);
+            color: var(--primary-bg);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-file-input:hover {
+            opacity: 0.9;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .convert-btn {
+            background: var(--accent);
+            color: var(--primary-bg);
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+        }
+
+        .convert-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .ad-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .conversion-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .preview-section {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-magic"></i> Ultimate Image Converter</h1>
+            <p>Convert images between multiple formats with live preview</p>
+        </header>
+
+        <!-- Ad Section Top -->
+        <div class="ad-section">
+            <!-- Google AdSense Code -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-YOUR_AD_CLIENT_ID"
+                 data-ad-slot="YOUR_AD_SLOT_ID"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="converter-wrapper">
+            <div class="preview-section">
+                <div class="loading-overlay">
+                    <i class="fas fa-spinner fa-spin fa-3x"></i>
+                </div>
+                
+                <div class="file-input-area">
+                    <label class="custom-file-input">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        Choose or Drag Image
+                        <input type="file" id="fileInput" accept="image/*">
+                    </label>
+                    <p class="text-secondary" style="margin-top: 1rem; color: var(--text-secondary);">
+                        Supports: PNG, JPG, WEBP
+                    </p>
+                </div>
+
+                <img id="imagePreview" class="image-preview" alt="Image Preview">
+            </div>
+
+            <div class="conversion-options">
+                <div class="option-card active" data-format="png" onclick="selectFormat('png')">
+                    <h3><i class="fab fa-pagelines"></i> PNG Format</h3>
+                    <p>Lossless image format with transparency support</p>
+                </div>
+                
+                <div class="option-card" data-format="jpeg" onclick="selectFormat('jpeg')">
+                    <h3><i class="fas fa-camera"></i> JPG Format</h3>
+                    <p>Compressed image format ideal for photographs</p>
+                </div>
+                
+                <div class="option-card" data-format="webp" onclick="selectFormat('webp')">
+                    <h3><i class="fab fa-chrome"></i> WEBP Format</h3>
+                    <p>Modern format with superior compression</p>
+                </div>
+            </div>
+
+            <button class="convert-btn" onclick="convertImage()">
+                <i class="fas fa-file-download"></i> Convert Now
+            </button>
+        </div>
+
+        <!-- Ad Section Bottom -->
+        <div class="ad-section">
+            <!-- Google AdSense Code -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-YOUR_AD_CLIENT_ID"
+                 data-ad-slot="YOUR_AD_SLOT_ID"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+
+    <script>
+        let selectedFormat = 'png';
+        
+        function selectFormat(format) {
+            selectedFormat = format;
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.toggle('active', card.dataset.format === format);
+            });
+        }
+
+        // Initialize first format as active
+        document.querySelector('.option-card').classList.add('active');
+
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('imagePreview');
+                preview.style.display = 'block';
+                preview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        });
+
+        function convertImage() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            
+            if (!file) {
+                alert('Please select an image file first!');
+                return;
+            }
+
+            loadingOverlay.style.display = 'flex';
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    
+                    canvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.download = `converted-image.${selectedFormat}`;
+                        a.href = url;
+                        a.click();
+                        loadingOverlay.style.display = 'none';
+                        URL.revokeObjectURL(url);
+                    }, `image/${selectedFormat}`, 0.9);
+                };
+                img.onerror = () => {
+                    loadingOverlay.style.display = 'none';
+                    alert('Error loading image!');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Drag and drop functionality
+        const dropArea = document.querySelector('.file-input-area');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            document.getElementById('fileInput').files = files;
+            document.getElementById('fileInput').dispatchEvent(new Event('change'));
+        }
+    </script>
+</body>
+</html>
